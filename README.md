@@ -3,6 +3,8 @@
 these are just some rough notes?
 ive chosen a simple project but then what do i want out of it?
 
+how to write a readme
+
 git
 
 a chance to revice css and html
