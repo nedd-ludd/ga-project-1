@@ -1,3 +1,5 @@
+const ninarow = require("ninarow")
+
 function init() {
   const grid = document.querySelector(".grid")
   const gridHeight = 6
@@ -101,25 +103,25 @@ function init() {
     isP1 = !isP1
   }
 
-  function checkFour(array, player) {
-    let win = false
-    let accumulator = 0
-    for (const token of array) {
-      if (token === player) {
-        accumulator += 1
-      } else if (accumulator === 4) {
-        win = true
-        break
-      } else {
-        accumulator = 0
-      }
-    }
-    if (accumulator === 4) {
-      return true
-    } else {
-      return win
-    }
-  }
+  // function checkFour(array, player) {
+  //   let win = false
+  //   let accumulator = 0
+  //   for (const token of array) {
+  //     if (token === player) {
+  //       accumulator += 1
+  //     } else if (accumulator === 4) {
+  //       win = true
+  //       break
+  //     } else {
+  //       accumulator = 0
+  //     }
+  //   }
+  //   if (accumulator === 4) {
+  //     return true
+  //   } else {
+  //     return win
+  //   }
+  // }
 
   function checkForWinner(player){
     for (const array of testArrays) {
@@ -128,7 +130,10 @@ function init() {
         const cell = document.querySelector('[data-index="' + item + '"]')
         classArray.push(cell.className)
       }
-      if (checkFour(classArray, player)) {
+      // if (checkFour(classArray, player)) {
+      //   winner = player
+      // }
+      if (ninarow(classArray, 4, player)) {
         winner = player
       }
     }
