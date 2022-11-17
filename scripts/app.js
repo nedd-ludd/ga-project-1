@@ -1,4 +1,4 @@
-const ninarow = require("ninarow")
+// const ninarow = require("ninarow")
 
 function init() {
   const grid = document.querySelector(".grid")
@@ -18,11 +18,10 @@ function init() {
     for (let index = 0; index < gridCount; index++) {
       const cell = document.createElement("div")
       cell.setAttribute("data-index", index)
-      // cell.dataset.row = Math.floor(index / 7)
       if (column === gridWidth) {
         column = 0
       }
-      // cell.dataset.column = column
+      cell.setAttribute("column", column)
       idCoordinates[index] = [column,Math.floor(index / 7) ]
       column ++
       cells.push(cell)
@@ -93,35 +92,15 @@ function init() {
     }
 
     //join all arrays in "testArrays"
-    testArrays = rowArrays.concat(columnArrays, diagArrays, diagNumbers2)
+    return rowArrays.concat(columnArrays, diagArrays, diagNumbers2)
   }
-  createTestArrays()
+  testArrays = createTestArrays()
 
-  function addToken(event) {
+  function addToken(cell) {
     const turn = isP1 ? players.player1 : players.player2
-    cells[event.target.dataset.index].classList.add(turn)
+    cells[cell].classList.add(turn)
     isP1 = !isP1
   }
-
-  // function checkFour(array, player) {
-  //   let win = false
-  //   let accumulator = 0
-  //   for (const token of array) {
-  //     if (token === player) {
-  //       accumulator += 1
-  //     } else if (accumulator === 4) {
-  //       win = true
-  //       break
-  //     } else {
-  //       accumulator = 0
-  //     }
-  //   }
-  //   if (accumulator === 4) {
-  //     return true
-  //   } else {
-  //     return win
-  //   }
-  // }
 
   function checkForWinner(player){
     for (const array of testArrays) {
@@ -130,9 +109,6 @@ function init() {
         const cell = document.querySelector('[data-index="' + item + '"]')
         classArray.push(cell.className)
       }
-      // if (checkFour(classArray, player)) {
-      //   winner = player
-      // }
       if (ninarow(classArray, 4, player)) {
         winner = player
       }
@@ -144,26 +120,90 @@ function init() {
     return (len >= gridCount)
   }
 
+
   function gameCycle(event){
-    // TODO if column not already full
-    if (cells[event.target.dataset.index].classList.length){
-      alert("This cell is full, please try another  : )")
-    } else {
-      addToken(event)
+
+    function getIDsFromColumn(column) {
+      const array = []
+      for (let i = column; i < (column + gridHeight); i++) {
+        if (i === column) {
+          array.push(i)
+        } else {
+          array.push(array[array.length - 1] + 7)
+        }
+      }
+      return array
     }
+    // returns false if no space left else which cell
+    function getNextSpaceLeft(columnIds) {
+      //initiate free cell as last in array 
+      let freeCell = columnIds[columnIds.length - 1]
+
+      // converts array of cell ids to actual null/ class values from game
+      const tokenArray = columnIds.map(cell => document.querySelector('[data-index="' + cell + '"]').getAttribute("class" ))
+
+      //filtered takes array of null and classes, filters nulls
+      const filtered = tokenArray.filter(Boolean)
+
+      function minIndex(array) {
+        let min = 0
+        if (!array.includes("red")) {
+          min = array.indexOf("yellow")
+        } else if (!array.includes("yellow")) {
+          min = array.indexOf("red")
+        } else {
+          min = Math.min((array.indexOf("red")), (array.indexOf("yellow")))
+        }
+        return min
+      } 
+
+      if (filtered.length === columnIds.length) { //if
+        freeCell = -1
+      } else if (filtered.length === 1) {
+        freeCell = columnIds[columnIds.length - 2]
+      } else if (filtered.length > 1) {
+        freeCell = columnIds[minIndex(tokenArray) - 1]
+      } 
+      return freeCell
+    }
+
+    const whichColumnClicked = event.target.getAttribute("column")
+    const columnIds = getIDsFromColumn(parseInt(whichColumnClicked))
+    const nextAvailableSpace = getNextSpaceLeft(columnIds)
+ 
+    if (nextAvailableSpace < 0){
+      alert("This column is full, please try another  : )")
+    } else {
+      addToken(nextAvailableSpace)
+    }
+
     Object.keys(players).forEach(key =>checkForWinner(players[key]))
     checkBoardFull(cells)
 
-    if (winner) {
+    function gameFinish() {
       alert(`${winner} wins!`)
+    }
+
+    if (winner) {
+      // buggy - alert comes before last token
+      setTimeout(gameFinish, 100)
     }
     if (boardFull) {
       alert("Match is a draw!")
     }
+
   }
-  cells.forEach(cell => addEventListener("click", gameCycle))
+  cells.forEach(cell => cell.addEventListener("click", gameCycle))
 }
 document.addEventListener("DOMContentLoaded", init)
+
+
+// function resetGame() {
+//   cells.classList.remove("red")
+//   cells.classList.remove("yellow")
+//   location.reload()
+// }
+// setTimeout(resetGame, 3000)
 
 // TODO: add data rows
 // TODO: logic for if board is full
@@ -174,3 +214,5 @@ document.addEventListener("DOMContentLoaded", init)
 // cell.dataset.column = Math.ceil((index + 1) / 7)
 // cell.dataset.column = index.toString().slice(-1)
 // cell.dataset.column = Math.floor(index / 7)
+
+//*//     

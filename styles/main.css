@@ -5,11 +5,19 @@
 body {
   height: 100vh;
   margin: 0;
+  margin: 0;
 }
 
+.hero-image{
+  /* background-image: url("https://i.imgur.com/vjqpube.jpg"); */
+  background-image: url("../static/ezgif-4-65334f6bdf.jpg");
+  background-position: bottom center;
+  background-size: cover;
+}
 
 .grid-wrapper {
   height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,11 +30,25 @@ body {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   flex-wrap: wrap;
-  height: 100%;
   justify-content: center;
-  height: 600px;
-  width: 700px;
+
 }
+
+
+
+@media (min-width: 350px) {
+  .grid {
+    height: 350px;
+    width: 408.3333333px;
+  }
+}
+@media (min-width: 730px) {
+  .grid {
+    height: 600px;
+    width: 700px;
+  }
+}
+
 
 .grid div {
   /* margin: 2px; */
