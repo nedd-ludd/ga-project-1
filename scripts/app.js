@@ -103,6 +103,7 @@ function init() {
     return rowArrays.concat(columnArrays, diagArrays, diagNumbers2)
   }
   testArrays = createTestArrays()
+  console.log(testArrays)
 
   function addToken(cell) {
     const turn = isP1 ? players.player1 : players.player2
@@ -139,8 +140,8 @@ function init() {
   }
 
   function updateScore() {
-    p1score.textContent = `__${playerOneScore}__`
-    p2score.textContent = `__${playerTwoScore}__`
+    p1score.textContent = `  ${playerOneScore}  `
+    p2score.textContent = `  ${playerTwoScore}  `
   }
 
   function resetGame() {
@@ -205,20 +206,21 @@ function init() {
     Object.keys(players).forEach(key =>checkForWinner(players[key]))
     checkBoardFull(cells)
 
-    function gameFinish() {
+    function sayWinner() {
       alert(`${winner} wins!`)
-      setTimeout(resetGame, 1000)
+      // setTimeout(resetGame, 1000)
     }
 
     if (winner) {
-      alert(`${winner} wins!`)
+      
       if (winner == "red") {
         playerOneScore += 1
       } else {
         playerTwoScore += 1
       }
       updateScore()
-      setTimeout(restoreDefaults, 100)
+      setTimeout(sayWinner, 100)
+      setTimeout(restoreDefaults, 200)
     
     }
     if (boardFull) {
@@ -234,14 +236,7 @@ function init() {
 }
 document.addEventListener("DOMContentLoaded", init)
 
-
-
-// TODO: choose player avatar
-// TODO: add token to column from anywhere within that column
-// TODO: no more tokens in a column when full ( dont have that problem with individual)
-
 // cell.dataset.column = Math.ceil((index + 1) / 7)
 // cell.dataset.column = index.toString().slice(-1)
 // cell.dataset.column = Math.floor(index / 7)
 
-//*//     
