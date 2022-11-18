@@ -2,6 +2,14 @@
 
 function init() {
   const grid = document.querySelector(".grid")
+  const resetBtn = document.querySelector(".btn-reset")
+  const p1score = document.querySelector(".p1score")
+  const p2score = document.querySelector(".p2score")
+  const immediateText = "_____"
+  p2score.textContent = immediateText
+  p1score.textContent = immediateText
+  let playerOneScore = 0
+  let playerTwoScore = 0
   const gridHeight = 6
   const gridWidth = 7
   const gridCount = gridWidth * gridHeight
@@ -120,7 +128,25 @@ function init() {
     return (len >= gridCount)
   }
 
+  function clearCells() {
+    cells.forEach(cell => cell.classList.remove("red"))
+    cells.forEach(cell => cell.classList.remove("yellow"))
+  }
+  function restoreDefaults(){
+    clearCells()
+    winner = 0
+    isP1 = true
+  }
 
+  function updateScore() {
+    p1score.textContent = `__${playerOneScore}__`
+    p2score.textContent = `__${playerTwoScore}__`
+  }
+
+  function resetGame() {
+    clearCells()
+    location.reload()
+  }
   function gameCycle(event){
 
     function getIDsFromColumn(column) {
@@ -138,13 +164,12 @@ function init() {
     function getNextSpaceLeft(columnIds) {
       //initiate free cell as last in array 
       let freeCell = columnIds[columnIds.length - 1]
-
       // converts array of cell ids to actual null/ class values from game
       const tokenArray = columnIds.map(cell => document.querySelector('[data-index="' + cell + '"]').getAttribute("class" ))
-
       //filtered takes array of null and classes, filters nulls
       const filtered = tokenArray.filter(Boolean)
 
+      //returns the first occurance of class -1
       function minIndex(array) {
         let min = 0
         if (!array.includes("red")) {
@@ -157,7 +182,7 @@ function init() {
         return min
       } 
 
-      if (filtered.length === columnIds.length) { //if
+      if (filtered.length === columnIds.length) { //denotes if full
         freeCell = -1
       } else if (filtered.length === 1) {
         freeCell = columnIds[columnIds.length - 2]
@@ -182,31 +207,35 @@ function init() {
 
     function gameFinish() {
       alert(`${winner} wins!`)
+      setTimeout(resetGame, 1000)
     }
 
     if (winner) {
-      // buggy - alert comes before last token
-      setTimeout(gameFinish, 100)
+      alert(`${winner} wins!`)
+      if (winner == "red") {
+        playerOneScore += 1
+      } else {
+        playerTwoScore += 1
+      }
+      updateScore()
+      setTimeout(restoreDefaults, 100)
+    
     }
     if (boardFull) {
       alert("Match is a draw!")
+      playerOneScore += 1
+      playerTwoScore += 1
+      updateScore()
+      setTimeout(restoreDefaults, 1000)
     }
-
   }
   cells.forEach(cell => cell.addEventListener("click", gameCycle))
+  resetBtn.addEventListener("click", resetGame)
 }
 document.addEventListener("DOMContentLoaded", init)
 
 
-// function resetGame() {
-//   cells.classList.remove("red")
-//   cells.classList.remove("yellow")
-//   location.reload()
-// }
-// setTimeout(resetGame, 3000)
 
-// TODO: add data rows
-// TODO: logic for if board is full
 // TODO: choose player avatar
 // TODO: add token to column from anywhere within that column
 // TODO: no more tokens in a column when full ( dont have that problem with individual)

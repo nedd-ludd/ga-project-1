@@ -13,10 +13,14 @@ body {
   background-image: url("../static/ezgif-4-65334f6bdf.jpg");
   background-position: bottom center;
   background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 }
 
 .grid-wrapper {
-  height: 100vh;
+  height: 80vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -31,9 +35,19 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  border-radius: 10px;
 
 }
 
+.gamecontrols{
+  background: rgb(61, 138, 254);
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  width: 700px;
+}
 
 
 @media (min-width: 350px) {
@@ -68,6 +82,19 @@ body {
   background-color: yellow;
 }
 
+.player1tally {
+  background-color: darkgrey;
+  color: red;
+}
+.player2tally {
+  color: yellow;
+  background-color: darkgrey;
+}
+
+.resetbutton {
+  display: flex;
+  align-content: center;
+}
 
 /* .grid div.pika {
   background-image: url('../assets/pika-sprite.png');
