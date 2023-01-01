@@ -1,4 +1,4 @@
-# ga-project-1
+# General Assembly Project 1: Classic Connect Four
 
 <<<<<<< HEAD
 what does this do
